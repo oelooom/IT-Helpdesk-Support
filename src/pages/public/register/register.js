@@ -16,11 +16,14 @@ import MenuIcon from '@material-ui/icons/Menu';
 import { Redirect } from 'react-router-dom';
 import Footer from '../../../components/footer/footer';
 import { createUser } from '../../../config/post/user';
+import { useFirebase } from '../../../config/firebase';
+import AppLoading from '../../../components/AppLoading'
 
 
 const Register = ({ currentUser }) => {
 
     const classes = useStyles();
+    const { user, loading } = useFirebase();
     const [isSubmitting, setSubmitting] = useState(false);
     const [form, setForm] = useState({
         email: '',
@@ -125,8 +128,12 @@ const Register = ({ currentUser }) => {
         }
     }
 
-    if (currentUser) {
-        return <Redirect to='/checker' />
+    if (loading) {
+        return <AppLoading />
+    }
+
+    if (user) {
+        return <Redirect to='/roleschecking' />
     }
 
     return (

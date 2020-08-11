@@ -1,8 +1,36 @@
 import React from 'react';
-import { auth } from '../../../config/firebase';
+import AppLoading from '../../../components/AppLoading';
+import { connect } from 'react-redux';
 
-const RolesChecking = () => {
-    return <input type='button' onClick={() => auth.signOut()} value='logot' />
+const RolesChecking = ({ currentUser, history }) => {
+
+
+    setTimeout(() => {
+        if (!currentUser) {
+            history.push('/')
+        }
+        else {
+            if (currentUser.isUser) {
+                history.push('/user')
+            }
+            else if (currentUser.isSupport) {
+                history.push('/support')
+            }
+            else if (currentUser.isHead) {
+                history.push('/head')
+            }
+        }
+
+    }, 1000)
+
+    return (
+        <AppLoading />
+    )
+
 }
 
-export default RolesChecking;
+const mapStateToProps = state => ({
+    currentUser: state.user.currentUser
+})
+
+export default connect(mapStateToProps)(RolesChecking);

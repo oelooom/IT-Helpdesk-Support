@@ -13,6 +13,7 @@ import { setCurrentUser } from './redux/user/userAction';
 import FirebaseProvider from './config/firebase';
 import RolesChecking from './pages/public/roleschecking/roleschecking';
 import Forgot from './pages/public/forgot/forgot';
+import User from './pages/private/user';
 
 function App({ setCurrentUser, currentUser }) {
 
@@ -46,6 +47,7 @@ function App({ setCurrentUser, currentUser }) {
         <SnackbarProvider maxSnack={3} autoHideDuration={3000}>
           <FirebaseProvider>
             <Switch>
+              <Route exact path='/user' component={User} />
               <Route exact path='/roleschecking' component={RolesChecking} />
               <Route exact path='/forgot' component={Forgot} />
               <Route exact path='/register' component={Register} />

@@ -17,7 +17,6 @@ export const createUser = async (userAuth, additionalData) => {
                 isUser: false,
                 isSupport: false,
                 isHead: true,
-                address: false,
                 ...additionalData
             })
         } catch (error) {
