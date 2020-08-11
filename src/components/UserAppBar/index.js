@@ -9,10 +9,12 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import useStyles from './styles';
+import { auth } from '../../config/firebase';
+import { withRouter, Link } from 'react-router-dom';
 
 
 
-export default function UserAppBar() {
+function UserAppBar({ history }) {
     const classes = useStyles();
 
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -37,8 +39,8 @@ export default function UserAppBar() {
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
-            <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-            <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+            <MenuItem onClick={() => history.push('/user/profile')}>Profile</MenuItem>
+            <MenuItem onClick={() => auth.signOut()}>Logout</MenuItem>
         </Menu>
     );
 
@@ -52,8 +54,9 @@ export default function UserAppBar() {
                     <Typography variant="h6" className={classes.title}>
                         IT Helpdesk Support
                     </Typography>
-                    <Button color="inherit">Work Instruction</Button>
-                    <Button color="inherit">Ticket</Button>
+                    <Button component={Link} to='/user' color="inherit">Home</Button>
+                    <Button component={Link} to='/user/instruction' color="inherit">Work Instruction</Button>
+                    <Button component={Link} to='/user/ticket' color="inherit">Ticket</Button>
                     <IconButton
                         edge="end"
                         aria-label="account of current user"
@@ -70,3 +73,5 @@ export default function UserAppBar() {
         </div>
     );
 }
+
+export default withRouter(UserAppBar);
