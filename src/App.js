@@ -44,6 +44,7 @@ function App({ setCurrentUser, currentUser }) {
         <SnackbarProvider maxSnack={3} autoHideDuration={3000}>
           <FirebaseProvider>
             <Switch>
+              <Route exact path='/user/ticket/:ticketID' component={User} />
               <Route exact path='/user/instruction' component={User} />
               <Route exact path='/user/ticket' component={User} />
               <Route exact path='/user' component={User} />
