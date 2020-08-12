@@ -14,12 +14,13 @@ import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import { Redirect } from 'react-router-dom';
-import Footer from '../../../components/footer/footer';
+import Footer from '../../../components/Footer/footer';
 import { useFirebase } from '../../../config/firebase';
 import AppLoading from '../../../components/AppLoading'
+import Illustration from '../../../assets/illustration-login-4.png';
 
 
-const Login = () => {
+const Login = ({ location }) => {
 
     const classes = useStyles();
     const { loading, user } = useFirebase();
@@ -106,7 +107,10 @@ const Login = () => {
     }
 
     if (user) {
-        return <Redirect to='/roleschecking' />
+        const redirectTo = location.state && location.state.from && location.state.from.pathname
+            ? location.state.from.pathname
+            : '/roleschecking';
+        return <Redirect to={redirectTo} />
     }
 
     return (
@@ -125,7 +129,7 @@ const Login = () => {
             <Container maxWidth='lg'>
                 <Grid container>
                     <Grid item sm={7} className={classes.gridItem}>
-                        <img src='https://firebasestorage.googleapis.com/v0/b/it-helpdesk-support.appspot.com/o/component%2Fillustration-login-4.png?alt=media&token=fde52fb7-9787-40b2-aee4-c0e869598b2d' alt='Ilustrasi IT' className={classes.illustration} />
+                        <img src={Illustration} alt='Ilustrasi IT' className={classes.illustration} />
                     </Grid>
                     <Grid item sm={5} className={classes.gridItem}>
                         <Paper elevation={2} className={classes.paper}>

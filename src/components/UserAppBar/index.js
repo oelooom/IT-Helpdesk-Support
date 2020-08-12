@@ -55,8 +55,8 @@ function UserAppBar({ history }) {
                         IT Helpdesk Support
                     </Typography>
                     <Button component={Link} to='/user' color="inherit">Home</Button>
-                    <Button component={Link} to='/user/instruction' color="inherit">Work Instruction</Button>
                     <Button component={Link} to='/user/ticket' color="inherit">Ticket</Button>
+                    <Button component={Link} to='/user/instruction' color="inherit">Work Instruction</Button>
                     <IconButton
                         edge="end"
                         aria-label="account of current user"

@@ -8,6 +8,7 @@ const RolesChecking = ({ currentUser, history }) => {
     setTimeout(() => {
         if (!currentUser) {
             history.push('/')
+
         }
         else {
             if (currentUser.isUser) {

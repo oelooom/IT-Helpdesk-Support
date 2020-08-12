@@ -24,7 +24,6 @@ function App({ setCurrentUser, currentUser }) {
           const userRef = await createUser(userAuth);
 
           userRef.onSnapshot(snapShot => {
-            console.log(snapShot.id)
             setCurrentUser({
               id: snapShot.id,
               ...snapShot.data()
