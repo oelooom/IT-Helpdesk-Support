@@ -28,11 +28,14 @@ const User = ({ currentUser, history, location }) => {
         history.push('/support')
     }
 
+    const Temp = () => <h1>Detail Tikcet</h1>
+
     return (
         <React.Fragment>
             <UserAppBar />
             <Switch>
                 <Route path='/user/instruction' component={Instruction} />
+                <Route path='/user/ticket/:tickeId' component={Temp} />
                 <Route path='/user/ticket' component={Ticket} />
                 <Route component={Home} />
             </Switch>
