@@ -16,11 +16,11 @@ import Auth from './pages/public';
 function App({ setCurrentUser, currentUser }) {
 
   useEffect(() => {
-    function fetchData() {
+
+    const fetchData = async () => {
       auth.onAuthStateChanged(async userAuth => {
         if (userAuth) {
           const userRef = await createUser(userAuth);
-
           userRef.onSnapshot(snapShot => {
             setCurrentUser({
               id: snapShot.id,

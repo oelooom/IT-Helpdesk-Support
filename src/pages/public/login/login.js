@@ -9,7 +9,6 @@ import Button from '@material-ui/core/Button';
 import isEmail from 'validator/lib/isEmail';
 import { auth } from '../../../config/firebase';
 
-
 const Login = ({ location }) => {
 
     const classes = useStyles();
@@ -85,9 +84,9 @@ const Login = ({ location }) => {
                 }
 
                 setError(newError);
+                setSubmitting(false);
             }
 
-            setSubmitting(false);
         }
     }
 

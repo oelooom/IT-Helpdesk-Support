@@ -112,9 +112,9 @@ const Register = ({ currentUser }) => {
                 }
 
                 setError(newError);
+                setSubmitting(false);
             }
 
-            setSubmitting(false);
         }
     }
 
