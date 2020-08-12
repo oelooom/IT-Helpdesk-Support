@@ -14,9 +14,9 @@ export const createUser = async (userAuth, additionalData) => {
         try {
             await userRef.set({
                 email: email,
-                isUser: false,
+                isUser: true,
                 isSupport: false,
-                isHead: true,
+                isHead: false,
                 ...additionalData
             })
         } catch (error) {

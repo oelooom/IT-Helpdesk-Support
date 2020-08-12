@@ -4,16 +4,14 @@ import ThemeProvider from '@material-ui/styles/ThemeProvider';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { SnackbarProvider } from 'notistack';
 import { Switch, Route } from 'react-router-dom';
-import Login from './pages/public/login/login';
-import Register from './pages/public/register/register';
 import { auth } from './config/firebase';
 import { createUser } from './config/post/user';
 import { connect } from 'react-redux';
 import { setCurrentUser } from './redux/user/userAction';
 import FirebaseProvider from './config/firebase';
 import RolesChecking from './pages/public/roleschecking/roleschecking';
-import Forgot from './pages/public/forgot/forgot';
 import User from './pages/private/user';
+import Auth from './pages/public';
 
 function App({ setCurrentUser, currentUser }) {
 
@@ -50,9 +48,9 @@ function App({ setCurrentUser, currentUser }) {
               <Route exact path='/user/ticket' component={User} />
               <Route exact path='/user' component={User} />
               <Route exact path='/roleschecking' component={RolesChecking} />
-              <Route exact path='/forgot' component={Forgot} />
-              <Route exact path='/register' component={Register} />
-              <Route exact path='/' component={Login} />
+              <Route exact path='/forgot' component={Auth} />
+              <Route exact path='/register' component={Auth} />
+              <Route exact path='/' component={Auth} />
             </Switch>
           </FirebaseProvider>
         </SnackbarProvider>
