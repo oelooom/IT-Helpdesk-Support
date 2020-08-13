@@ -34,12 +34,12 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-function ListTicket({ addTicket, removeTicket, ticket }) {
+function ListTicket({ addTicket, removeTicket, ticket, currentUser }) {
 
 
     useEffect(() => {
         async function getData() {
-            const userRef = firestore.collection('ticket');
+            const userRef = firestore.collection('ticket').where('userId', '==', currentUser.id);
 
             userRef.onSnapshot(async snap => {
                 const changes = snap.docChanges();
@@ -59,7 +59,7 @@ function ListTicket({ addTicket, removeTicket, ticket }) {
         }
 
         getData();
-    }, [addTicket, removeTicket])
+    }, [addTicket, removeTicket, currentUser])
 
     const columns = [
         { id: 'title', label: 'Title', minWidth: 180 },
@@ -164,7 +164,8 @@ function ListTicket({ addTicket, removeTicket, ticket }) {
 }
 
 const mapStateToProps = state => ({
-    ticket: state.ticket.ticket
+    ticket: state.ticket.ticket,
+    currentUser: state.user.currentUser
 })
 
 const mapDispatchToProps = dispatch => ({

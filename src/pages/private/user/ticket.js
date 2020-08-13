@@ -27,6 +27,7 @@ const Home = ({ history, currentUser }) => {
         dest: '',
         printer: '',
         status: '1',
+        userId: currentUser.id,
         userdata: { ...currentUser }
     })
 

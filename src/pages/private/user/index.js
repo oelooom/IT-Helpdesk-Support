@@ -8,6 +8,7 @@ import Home from './home';
 import Ticket from './ticket';
 import Instruction from './instruction';
 import AppLoading from '../../../components/AppLoading';
+import DetailTicket from './detailticket';
 
 
 const User = ({ currentUser, history, location }) => {
@@ -25,17 +26,15 @@ const User = ({ currentUser, history, location }) => {
     if (currentUser.isSupport) {
         history.push('/support')
     } else if (currentUser.isHead) {
-        history.push('/support')
+        history.push('/head')
     }
-
-    const Temp = () => <h1>Detail Tikcet</h1>
 
     return (
         <React.Fragment>
             <UserAppBar />
             <Switch>
                 <Route path='/user/instruction' component={Instruction} />
-                <Route path='/user/ticket/:tickeId' component={Temp} />
+                <Route path='/user/ticket/:ticketId' component={DetailTicket} />
                 <Route path='/user/ticket' component={Ticket} />
                 <Route component={Home} />
             </Switch>

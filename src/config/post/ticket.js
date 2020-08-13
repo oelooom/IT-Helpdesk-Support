@@ -19,7 +19,8 @@ export const createTicket = async data => {
         }
     } else if (data.category === 'Printer Repair') {
         additionalData = {
-            printer: data.printer
+            printer: data.printer,
+            ip: data.ip
         }
     } else {
         additionalData = {
@@ -35,7 +36,8 @@ export const createTicket = async data => {
             category: data.category,
             detail: data.detail,
             status: data.status,
-            support: null,
+            supportId: null,
+            userId: data.userId,
             created: created,
             userdata: data.userdata,
             ...additionalData
@@ -46,3 +48,28 @@ export const createTicket = async data => {
 
     return userRef;
 }
+
+export const createCommentary = async data => {
+
+
+
+    const userRef = firestore.collection(`ticket`).doc(data.ticketId).collection('commentary');
+
+    const created = new Date();
+
+    try {
+        await userRef.add({
+            ticketId: data.ticketId,
+            userId: data.userId,
+            displayName: data.displayName,
+            created: created,
+            photoUrl: data.photoUrl,
+            commentary: data.commentary
+        })
+    } catch (error) {
+        console.error(error)
+    }
+
+    return userRef;
+}
+
