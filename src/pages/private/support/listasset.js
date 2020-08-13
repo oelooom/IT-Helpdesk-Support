@@ -80,12 +80,19 @@ function ListAsset({ addAsset, removeTicket, asset, currentUser }) {
         setPage(0);
     };
 
+    const [search, setSearch] = React.useState('');
+    const handleSearch = (event) => {
+        event.preventDefault();
+
+        setSearch(event.target.value.toLowerCase());
+    }
+
 
     return (
         <Paper className={classes.root} elevation={2}>
             <div className={classes.tableHead}>
                 <Typography variant='h6'>List Assets</Typography>
-                <TextField className={classes.search} id='search' name='search' label='Search Assets' size='small' />
+                <TextField className={classes.search} id='search' name='search' label='Search Assets' size='small' onChange={handleSearch} />
             </div>
             <TableContainer className={classes.container}>
                 <Table stickyHeader aria-label="sticky table">
@@ -103,7 +110,7 @@ function ListAsset({ addAsset, removeTicket, asset, currentUser }) {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {asset.sort((a, b) => new Date(b.created.seconds * 1000) - new Date(a.created.seconds * 1000)).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => {
+                        {asset.sort((a, b) => new Date(b.created.seconds * 1000) - new Date(a.created.seconds * 1000)).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).filter(data => data.displayName.toLowerCase().includes(search)).map((row, index) => {
 
                             return (
                                 <React.Fragment key={index}>

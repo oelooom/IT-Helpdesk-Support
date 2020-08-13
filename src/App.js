@@ -60,6 +60,7 @@ function App({ setCurrentUser, currentUser }) {
               <Route exact path='/head/support' component={Head} />
               <Route exact path='/head' component={Head} />
               <Route exact path='/user/ticket/:ticketID' component={User} />
+              <Route exact path='/user/setting' component={User} />
               <Route exact path='/user/instruction' component={User} />
               <Route exact path='/user/ticket' component={User} />
               <Route exact path='/user' component={User} />

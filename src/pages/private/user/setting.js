@@ -176,7 +176,7 @@ const Setting = ({ match }) => {
     }
 
     return (
-        <div>
+        <div className={classes.container}>
             <Typography variant='h5' component='h1'>Edit Akun : {form.displayName}</Typography>
             <Grid container alignItems='center' justify='center'>
                 <Grid item xs={12} sm={7} className={classes.form}>

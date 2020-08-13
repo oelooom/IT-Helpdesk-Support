@@ -9,6 +9,7 @@ import Ticket from './ticket';
 import Instruction from './instruction';
 import AppLoading from '../../../components/AppLoading';
 import DetailTicket from './detailticket';
+import Setting from './setting';
 
 
 const User = ({ currentUser, history, location }) => {
@@ -33,6 +34,7 @@ const User = ({ currentUser, history, location }) => {
         <React.Fragment>
             <UserAppBar />
             <Switch>
+                <Route path='/user/setting' component={Setting} />
                 <Route path='/user/instruction' component={Instruction} />
                 <Route path='/user/ticket/:ticketId' component={DetailTicket} />
                 <Route path='/user/ticket' component={Ticket} />

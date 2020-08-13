@@ -128,12 +128,19 @@ function Ticket({ addTicket, removeTicket, ticket, currentUser, addSupport, supp
         }
     }
 
+    const [search, setSearch] = React.useState('');
+    const handleSearch = (event) => {
+        event.preventDefault();
+
+        setSearch(event.target.value.toLowerCase());
+    }
+
     return (
         <React.Fragment>
             <Paper className={classes.root} elevation={2}>
                 <div className={classes.tableHead}>
                     <Typography variant='h6'>List Ticket</Typography>
-                    <TextField className={classes.search} id='search' name='search' label='Search Ticket' size='small' />
+                    <TextField className={classes.search} id='search' name='search' label='Search Ticket' size='small' onChange={handleSearch} />
                 </div>
                 <TableContainer className={classes.container}>
                     <Table stickyHeader aria-label="sticky table">
@@ -151,7 +158,7 @@ function Ticket({ addTicket, removeTicket, ticket, currentUser, addSupport, supp
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {ticket.sort((a, b) => new Date(b.created.seconds * 1000) - new Date(a.created.seconds * 1000)).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => {
+                            {ticket.sort((a, b) => new Date(b.created.seconds * 1000) - new Date(a.created.seconds * 1000)).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).filter(data => data.title.toLowerCase().includes(search)).map((row, index) => {
                                 let status;
                                 if (row.status === '1') {
                                     status = 'Received'

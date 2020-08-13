@@ -9,12 +9,12 @@ import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
+import Link from '@material-ui/core/Link';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import { addTicket, removeTicket } from '../../../redux/ticket/ticketAction';
+import { addInstruction, removeInstruction } from '../../../redux/instruction/instructionAction';
 import { connect } from 'react-redux';
 import { firestore } from '../../../config/firebase';
-import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -34,24 +34,24 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-function ListTicket({ addTicket, removeTicket, ticket, currentUser }) {
+function ListInstruction({ addInstruction, removeInstruction, instruction, currentUser }) {
 
 
     useEffect(() => {
         async function getData() {
-            const userRef = firestore.collection('ticket').where('userId', '==', currentUser.id);
+            const userRef = firestore.collection('instructions');
 
             userRef.onSnapshot(async snap => {
                 const changes = snap.docChanges();
                 changes.forEach(change => {
                     if (change.type === 'added') {
-                        addTicket({ id: change.doc.id, ...change.doc.data() })
+                        addInstruction({ id: change.doc.id, ...change.doc.data() })
                     }
                     else if (change.type === 'modified') {
-                        addTicket({ id: change.doc.id, ...change.doc.data() })
+                        addInstruction({ id: change.doc.id, ...change.doc.data() })
                     }
                     else if (change.type === 'removed') {
-                        removeTicket({ id: change.doc.id, ...change.doc.data() });
+                        removeInstruction({ id: change.doc.id, ...change.doc.data() });
 
                     }
                 })
@@ -59,13 +59,12 @@ function ListTicket({ addTicket, removeTicket, ticket, currentUser }) {
         }
 
         getData();
-    }, [addTicket, removeTicket, currentUser])
+    }, [addInstruction, removeInstruction, currentUser])
 
     const columns = [
-        { id: 'title', label: 'Title', minWidth: 180 },
-        { id: 'category', label: 'Category', align: 'center', minWidth: 160 },
-        { id: 'status', label: 'Status', minWidth: 160, align: 'center' },
-        { id: 'detail', label: 'Detail', minWidth: 100, align: 'center' }
+        { id: 'keyword', label: 'Keyword', minWidth: 180 },
+        { id: 'file', label: 'File', align: 'center', minWidth: 160 },
+        { id: 'action', label: 'action', Align: 'center', minWidth: 100 }
     ];
 
     const classes = useStyles();
@@ -91,8 +90,8 @@ function ListTicket({ addTicket, removeTicket, ticket, currentUser }) {
     return (
         <Paper className={classes.root} elevation={2}>
             <div className={classes.tableHead}>
-                <Typography variant='h6'>List Ticket</Typography>
-                <TextField className={classes.search} id='search' name='search' label='Search Ticket' size='small' onChange={handleSearch} />
+                <Typography variant='h6'>List Assets</Typography>
+                <TextField className={classes.search} id='search' name='search' label='Search Instruction' size='small' onChange={handleSearch} />
             </div>
             <TableContainer className={classes.container}>
                 <Table stickyHeader aria-label="sticky table">
@@ -110,48 +109,27 @@ function ListTicket({ addTicket, removeTicket, ticket, currentUser }) {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {ticket.sort((a, b) => new Date(b.created.seconds * 1000) - new Date(a.created.seconds * 1000)).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).filter(data => data.title.toLowerCase().includes(search)).map((row, index) => {
-                            let status;
-                            if (row.status === '1') {
-                                status = 'Received'
-                            } else if (row.status === '2') {
-                                status = `Assigned To ${row.supportData.displayName}`
-                            } else if (row.status === '3') {
-                                status = `Troubleshoot by ${row.supportData.displayName} `
-                            } else if (row.status === '4') {
-                                status = `Finish `
-                            } else if (row.status === '5') {
-                                status = 'Lending Accepted'
-                            } else if (row.status === '5') {
-                                status = 'Lending Returned'
-                            } else {
-                                status = `Rejected By IT Dept`
-                            }
+                        {instruction.sort((a, b) => new Date(b.created.seconds * 1000) - new Date(a.created.seconds * 1000)).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).filter(data => data.keyword.toLowerCase().includes(search)).map((row, index) => {
+
                             return (
                                 <React.Fragment key={index}>
                                     <TableRow hover role="checkbox" tabIndex={-1}>
                                         <TableCell
                                             style={{ minWidth: 180 }}
                                         >
-                                            {row.title}
+                                            {row.keyword}
                                         </TableCell>
                                         <TableCell
                                             align='center'
                                             style={{ minWidth: 160 }}
                                         >
-                                            {row.category}
-                                        </TableCell>
-                                        <TableCell
-                                            align='center'
-                                            style={{ minWidth: 160 }}
-                                        >
-                                            {status}
+                                            <Button component={Link} variant='contained' target="_blank" href={row.file}>File</Button>
                                         </TableCell>
                                         <TableCell
                                             align='center'
                                             style={{ minWidth: 100 }}
                                         >
-                                            <Button variant='contained' component={Link} to={`/user/ticket/${row.id}`} color='primary' size='small'>Detail</Button>
+                                            <Button variant='contained' color='primary' size='small'>Detail</Button>
                                         </TableCell>
                                     </TableRow>
                                 </React.Fragment>
@@ -163,7 +141,7 @@ function ListTicket({ addTicket, removeTicket, ticket, currentUser }) {
             <TablePagination
                 rowsPerPageOptions={[5, 10, 25, 100]}
                 component="div"
-                count={ticket.length}
+                count={instruction.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onChangePage={handleChangePage}
@@ -174,13 +152,12 @@ function ListTicket({ addTicket, removeTicket, ticket, currentUser }) {
 }
 
 const mapStateToProps = state => ({
-    ticket: state.ticket.ticket,
-    currentUser: state.user.currentUser
+    instruction: state.instruction.instruction
 })
 
 const mapDispatchToProps = dispatch => ({
-    addTicket: ticket => dispatch(addTicket(ticket)),
-    removeTicket: ticket => dispatch(removeTicket(ticket))
+    addInstruction: instruction => dispatch(addInstruction(instruction)),
+    removeInstruction: instruction => dispatch(removeInstruction(instruction))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(ListTicket);
+export default connect(mapStateToProps, mapDispatchToProps)(ListInstruction);

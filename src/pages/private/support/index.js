@@ -19,6 +19,7 @@ import SignOutIcon from '@material-ui/icons/ExitToApp';
 import HomeIcon from '@material-ui/icons/Home';
 import CallToActionIcon from '@material-ui/icons/CallToAction';
 import GroupIcon from '@material-ui/icons/Group';
+import SdStorageIcon from '@material-ui/icons/SdStorage';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import SettingIcon from '@material-ui/icons/Settings';
 import { Switch, Route, Redirect } from 'react-router-dom';
@@ -84,7 +85,7 @@ function ITSupport({ currentUser, history, location }) {
                             <Route path='/support/ticket:ticketId' children='Tikcet Management' />
                             <Route path='/support/ticket' children='Tikcet Management' />
                             <Route path='/support/instruction' children='Lending Management' />
-                            <Route path='/support/asset' children='Assett Management' />
+                            <Route path='/support/asset' children='Asset Management' />
                             <Route path='/support/setting' children='Account Setting' />
                         </Switch>
                     </Typography>
@@ -135,7 +136,7 @@ function ITSupport({ currentUser, history, location }) {
                     <Route path='/support/instruction' children={({ match, history }) => {
                         return (<ListItem button selected={match ? true : false} onClick={() => history.push('/support/instruction')}>
                             <ListItemIcon>
-                                <CallToActionIcon />
+                                <SdStorageIcon />
                             </ListItemIcon>
                             <ListItemText primary='Work Instruction' />
                         </ListItem>)

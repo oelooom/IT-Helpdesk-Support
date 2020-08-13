@@ -39,7 +39,7 @@ function UserAppBar({ history }) {
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
-            <MenuItem onClick={() => history.push('/user/profile')}>Profile</MenuItem>
+            <MenuItem onClick={() => history.push('/user/setting')}>Profile</MenuItem>
             <MenuItem onClick={() => auth.signOut()}>Logout</MenuItem>
         </Menu>
     );

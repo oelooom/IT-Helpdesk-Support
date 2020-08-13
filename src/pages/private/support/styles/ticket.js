@@ -10,7 +10,6 @@ const useStyles = makeStyles((theme) => ({
         alignItems: 'center'
     },
     gridItem: {
-        borderRight: '1px solid #ccc',
         height: '85vh',
         display: 'flex',
         alignItems: 'center',
@@ -38,6 +37,24 @@ const useStyles = makeStyles((theme) => ({
         marginTop: theme.spacing(2),
         justifyContent: 'space-between'
     },
+    hideInputFile: {
+        display: 'none'
+    },
+    uploadFotoProduk: {
+        textAlign: 'center',
+        padding: theme.spacing(3)
+    },
+    previewFotoProduk: {
+        width: '300px',
+        height: '300px'
+    },
+    iconRight: {
+        marginLeft: theme.spacing(1),
+        marginBottom: theme.spacing(0.5)
+    },
+    reverse: {
+        flexDirection: 'row-reverse'
+    }
 }));
 
 export default useStyles;
