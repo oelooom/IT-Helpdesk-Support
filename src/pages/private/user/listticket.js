@@ -109,11 +109,15 @@ function ListTicket({ addTicket, removeTicket, ticket, currentUser }) {
                             if (row.status === '1') {
                                 status = 'Received'
                             } else if (row.status === '2') {
-                                status = `Assigned To ${row.support}`
+                                status = `Assigned To ${row.supportData.displayName}`
                             } else if (row.status === '3') {
-                                status = `Troubleshoot by ${row.support} `
+                                status = `Troubleshoot by ${row.supportData.displayName} `
                             } else if (row.status === '4') {
                                 status = `Finish `
+                            } else if (row.status === '5') {
+                                status = 'Lending Accepted'
+                            } else if (row.status === '5') {
+                                status = 'Lending Returned'
                             } else {
                                 status = `Rejected By IT Dept`
                             }

@@ -3,6 +3,7 @@ import { checkTicket, removeTicket } from './ticketUtils';
 
 const INITIAL_STATE = {
     ticket: [],
+    lending: [],
     commentary: [],
     selectedTicket: null
 }
@@ -29,6 +30,12 @@ const ticketReducer = (state = INITIAL_STATE, action) => {
                 ...state,
                 commentary: checkTicket(state.commentary, action.payload)
             }
+        case ticketActionType.ADD_LENDING:
+            return {
+                ...state,
+                lending: checkTicket(state.lending, action.payload)
+            }
+
         default:
             return state;
     }

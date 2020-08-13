@@ -47,7 +47,7 @@ function Ticket({ addTicket, removeTicket, ticket, currentUser, addSupport, supp
 
     useEffect(() => {
         async function getData() {
-            const userRef = firestore.collection('ticket');
+            const userRef = firestore.collection('ticket').where('isLending', '==', false);
 
             userRef.onSnapshot(async snap => {
                 const changes = snap.docChanges();
@@ -170,6 +170,10 @@ function Ticket({ addTicket, removeTicket, ticket, currentUser, addSupport, supp
                                     status = `Troubleshoot by ${row.supportData.displayName} `
                                 } else if (row.status === '4') {
                                     status = `Finish `
+                                } else if (row.status === '5') {
+                                    status = 'Lending Accepted'
+                                } else if (row.status === '6') {
+                                    status = 'Lending Returned'
                                 } else {
                                     status = `Rejected By IT Dept`
                                 }
@@ -197,7 +201,9 @@ function Ticket({ addTicket, removeTicket, ticket, currentUser, addSupport, supp
                                                 align='center'
                                                 style={{ minWidth: 160 }}
                                             >
-                                                <Button variant='contained' color='secondary' size='small' onClick={() => handleClick(row.id)}>Assign</Button>
+
+                                                {row.status === '1' ? <Button variant='contained' color='secondary' size='small' onClick={() => handleClick(row.id)}>Assign</Button> : 'On Process'}
+
                                             </TableCell>
                                             <TableCell
                                                 align='center'

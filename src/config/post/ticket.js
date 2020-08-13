@@ -22,7 +22,12 @@ export const createTicket = async data => {
             printer: data.printer,
             ip: data.ip
         }
-    } else {
+    } else if (data.category === 'Asset Lending') {
+        additionalData = {
+            isLending: true
+        }
+    }
+    else {
         additionalData = {
             ip: data.ip
         }
@@ -39,6 +44,7 @@ export const createTicket = async data => {
             supportId: null,
             supportData: null,
             userId: data.userId,
+            isLending: false,
             created: created,
             userdata: data.userdata,
             ...additionalData
@@ -80,6 +86,36 @@ export const assignTicket = async (data) => {
             supportId: data.supportId,
             status: '2',
             supportData: { displayName: data.displayName }
+        })
+    } catch (e) {
+        alert(e.message)
+    }
+
+    return ticketRef;
+}
+
+export const confirmLending = async (data) => {
+    const ticketRef = firestore.collection('ticket').doc(data.ticketId);
+
+    const dataNew = data.status.toString();
+
+    try {
+        await ticketRef.update({
+            status: dataNew,
+        })
+    } catch (e) {
+        alert(e.message)
+    }
+
+    return ticketRef;
+}
+
+export const returnLending = async (data) => {
+    const ticketRef = firestore.collection('ticket').doc(data);
+
+    try {
+        await ticketRef.update({
+            status: '6',
         })
     } catch (e) {
         alert(e.message)

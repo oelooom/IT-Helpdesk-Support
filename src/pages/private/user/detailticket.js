@@ -79,11 +79,15 @@ function DetailTicket({ addSelectedTicket, selectedTicket, match, addCommentary,
         if (form.status === '1') {
             status = 'Received'
         } else if (form.status === '2') {
-            status = `Assigned To ${form.support}`
+            status = `Assigned To ${form.supportData.displayName}`
         } else if (form.status === '3') {
-            status = `Troubleshoot by ${form.support} `
+            status = `Troubleshoot by ${form.supportData.displayName} `
         } else if (form.status === '4') {
             status = `Finish `
+        } else if (form.status === '5') {
+            status = 'Lending Accepted'
+        } else if (form.status === '6') {
+            status = 'Returned'
         } else {
             status = `Rejected By IT Dept`
         }

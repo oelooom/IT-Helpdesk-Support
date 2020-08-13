@@ -20,3 +20,8 @@ export const addCommentary = commentary => ({
     type: ticketActionType.ADD_COMMENTARY,
     payload: commentary
 })
+
+export const addLending = lending => ({
+    type: ticketActionType.ADD_LENDING,
+    payload: lending
+})

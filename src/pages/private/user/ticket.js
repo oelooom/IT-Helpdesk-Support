@@ -45,8 +45,8 @@ const Home = ({ history, currentUser }) => {
         { title: 'Email Problem', id: '7' },
         { title: 'UCP ETP Error', id: '8' },
         { title: 'Security Issues', id: '9' },
-        { title: 'Others', id: '10' },
-        { title: '', id: '11' }
+        { title: 'Asset Lending', id: '10' },
+        { title: 'Others', id: '11' },
     ];
     const printerTypes = [
         { title: 'Passbook' },
@@ -152,7 +152,7 @@ const Home = ({ history, currentUser }) => {
                                     renderInput={(params) => <TextField {...params} label="Problem Category" variant="outlined" size='small' disabled={isSubmitting} fullWidth margin='normal' required />}
                                 />
 
-                                {component !== 'Copy Data' &&
+                                {component !== 'Copy Data' && component !== 'Asset Lending' ?
                                     <TextField
                                         id='ip'
                                         type='text'
@@ -167,7 +167,7 @@ const Home = ({ history, currentUser }) => {
                                         onChange={handleChange}
                                         fullWidth
                                         required
-                                    />}
+                                    /> : null}
 
 
                                 {component === 'Copy Data' &&

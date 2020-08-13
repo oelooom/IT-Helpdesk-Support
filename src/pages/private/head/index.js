@@ -21,17 +21,21 @@ import CallToActionIcon from '@material-ui/icons/CallToAction';
 import GroupIcon from '@material-ui/icons/Group';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import SettingIcon from '@material-ui/icons/Settings';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, Redirect } from 'react-router-dom';
+import { useFirebase } from '../../../config/firebase';
+import AppLoading from '../../../components/AppLoading';
 import Dashboard from './dashboard';
 import Support from './support';
 import Ticket from './ticket';
 import Lending from './lending';
 import Setting from './setting';
 import { auth } from '../../../config/firebase';
+import { connect } from 'react-redux';
 
 
-function Head() {
+function Head({ currentUser, history, location }) {
     const classes = useStyles();
+    const { user } = useFirebase();
     const [open, setOpen] = React.useState(true);
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -39,6 +43,20 @@ function Head() {
     const handleDrawerClose = () => {
         setOpen(false);
     };
+
+    if (!user) {
+        return <Redirect to={{ pathname: '/', state: { from: location } }} />
+    }
+
+    if (!currentUser) {
+        return <AppLoading />
+    }
+
+    if (currentUser.isSupport) {
+        history.push('/support')
+    } else if (currentUser.isUser) {
+        history.push('/user')
+    }
 
     return (
         <div className={classes.root}>
@@ -140,4 +158,8 @@ function Head() {
     );
 }
 
-export default Head;
+const mapStateToProps = state => ({
+    currentUser: state.user.currentUser
+})
+
+export default connect(mapStateToProps)(Head);
