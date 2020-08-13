@@ -14,6 +14,7 @@ import User from './pages/private/user';
 import Auth from './pages/public';
 import Head from './pages/private/head';
 import Support from './pages/private/support';
+import Report from './pages/private/head/report';
 
 function App({ setCurrentUser, currentUser }) {
 
@@ -53,6 +54,7 @@ function App({ setCurrentUser, currentUser }) {
               <Route exact path='/support/ticket' component={Support} />
               <Route exact path='/support/user' component={Support} />
               <Route exact path='/support/' component={Support} />
+              <Route exact path='/head/report' component={Report} />
               <Route exact path='/head/setting' component={Head} />
               <Route exact path='/head/ticket/:ticketID' component={Head} />
               <Route exact path='/head/ticket' component={Head} />
