@@ -25,25 +25,20 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 import { useFirebase } from '../../../config/firebase';
 import AppLoading from '../../../components/AppLoading';
 import Dashboard from './dashboard';
-import Support from './support';
-import DetailTicket from './detailticket';
+import User from './user';
 import Ticket from './ticket';
-import Lending from './lending';
+import Instruction from './instruction';
+import Asset from './asset';
 import Setting from './setting';
+import DetailTicket from './detailticket';
 import { auth } from '../../../config/firebase';
 import { connect } from 'react-redux';
 
 
-function Head({ currentUser, history, location }) {
+function ITSupport({ currentUser, history, location }) {
     const classes = useStyles();
     const { user } = useFirebase();
     const [open, setOpen] = React.useState(true);
-    const handleDrawerOpen = () => {
-        setOpen(true);
-    };
-    const handleDrawerClose = () => {
-        setOpen(false);
-    };
 
     if (!user) {
         return <Redirect to={{ pathname: '/', state: { from: location } }} />
@@ -53,11 +48,20 @@ function Head({ currentUser, history, location }) {
         return <AppLoading />
     }
 
-    if (currentUser.isSupport) {
-        history.push('/support')
+    if (currentUser.isHead) {
+        history.push('/head')
     } else if (currentUser.isUser) {
         history.push('/user')
     }
+
+
+    const handleDrawerOpen = () => {
+        setOpen(true);
+    };
+    const handleDrawerClose = () => {
+        setOpen(false);
+    };
+
 
     return (
         <div className={classes.root}>
@@ -75,11 +79,13 @@ function Head({ currentUser, history, location }) {
                     </IconButton>
                     <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
                         <Switch>
-                            <Route exact path='/head' children='Dashboard' />
-                            <Route path='/head/support' children='IT Support Management' />
-                            <Route path='/head/ticket' children='Tikcet Management' />
-                            <Route path='/head/lending' children='Lending Management' />
-                            <Route path='/head/setting' children='Account Setting' />
+                            <Route exact path='/support' children='Dashboard' />
+                            <Route path='/support/user' children='User Management' />
+                            <Route path='/support/ticket:ticketId' children='Tikcet Management' />
+                            <Route path='/support/ticket' children='Tikcet Management' />
+                            <Route path='/support/instruction' children='Lending Management' />
+                            <Route path='/support/asset' children='Assett Management' />
+                            <Route path='/support/setting' children='Account Setting' />
                         </Switch>
                     </Typography>
                     <IconButton color="inherit" onClick={() => auth.signOut()}>
@@ -95,47 +101,55 @@ function Head({ currentUser, history, location }) {
                 open={open}
             >
                 <div className={classes.toolbarIcon}>
-                    <Typography variant='h5' className={classes.toolbarIconText}>IT Head Pages</Typography>
+                    <Typography variant='h5' className={classes.toolbarIconText}>IT Support Pages</Typography>
                     <IconButton onClick={handleDrawerClose}>
                         <ChevronLeftIcon />
                     </IconButton>
                 </div>
                 <Divider />
                 <List>
-                    <Route exact path='/head' children={({ match, history }) => {
-                        return (<ListItem button selected={match ? true : false} onClick={() => history.push('/head')}>
+                    <Route exact path='/support' children={({ match, history }) => {
+                        return (<ListItem button selected={match ? true : false} onClick={() => history.push('/support')}>
                             <ListItemIcon>
                                 <HomeIcon />
                             </ListItemIcon>
                             <ListItemText primary='Dashboard' />
                         </ListItem>)
                     }} />
-                    <Route path='/head/support' children={({ match, history }) => {
-                        return (<ListItem button selected={match ? true : false} onClick={() => history.push('/head/support')}>
+                    <Route path='/support/user' children={({ match, history }) => {
+                        return (<ListItem button selected={match ? true : false} onClick={() => history.push('/support/user')}>
                             <ListItemIcon>
                                 <GroupIcon />
                             </ListItemIcon>
-                            <ListItemText primary='IT Support' />
+                            <ListItemText primary='User Management' />
                         </ListItem>)
                     }} />
-                    <Route path='/head/ticket' children={({ match, history }) => {
-                        return (<ListItem button selected={match ? true : false} onClick={() => history.push('/head/ticket')}>
+                    <Route path='/support/ticket' children={({ match, history }) => {
+                        return (<ListItem button selected={match ? true : false} onClick={() => history.push('/support/ticket')}>
                             <ListItemIcon>
                                 <AssignmentIcon />
                             </ListItemIcon>
                             <ListItemText primary='Tikcet' />
                         </ListItem>)
                     }} />
-                    <Route path='/head/lending' children={({ match, history }) => {
-                        return (<ListItem button selected={match ? true : false} onClick={() => history.push('/head/lending')}>
+                    <Route path='/support/instruction' children={({ match, history }) => {
+                        return (<ListItem button selected={match ? true : false} onClick={() => history.push('/support/instruction')}>
                             <ListItemIcon>
                                 <CallToActionIcon />
                             </ListItemIcon>
-                            <ListItemText primary='Lending' />
+                            <ListItemText primary='Work Instruction' />
                         </ListItem>)
                     }} />
-                    <Route path='/head/setting' children={({ match, history }) => {
-                        return (<ListItem button selected={match ? true : false} onClick={() => history.push('/head/setting')}>
+                    <Route path='/support/asset' children={({ match, history }) => {
+                        return (<ListItem button selected={match ? true : false} onClick={() => history.push('/support/asset')}>
+                            <ListItemIcon>
+                                <CallToActionIcon />
+                            </ListItemIcon>
+                            <ListItemText primary='Asset Management' />
+                        </ListItem>)
+                    }} />
+                    <Route path='/support/setting' children={({ match, history }) => {
+                        return (<ListItem button selected={match ? true : false} onClick={() => history.push('/support/setting')}>
                             <ListItemIcon>
                                 <SettingIcon />
                             </ListItemIcon>
@@ -148,11 +162,12 @@ function Head({ currentUser, history, location }) {
                 <div className={classes.appBarSpacer} />
                 <Container maxWidth="lg" className={classes.container}>
                     <Switch>
-                        <Route path='/head/support' component={Support} />
-                        <Route path='/head/ticket/:ticketId' component={DetailTicket} />
-                        <Route path='/head/ticket' component={Ticket} />
-                        <Route path='/head/lending' component={Lending} />
-                        <Route path='/head/setting' component={Setting} />
+                        <Route path='/support/user' component={User} />
+                        <Route path='/support/ticket/:ticketId' component={DetailTicket} />
+                        <Route path='/support/ticket' component={Ticket} />
+                        <Route path='/support/instruction' component={Instruction} />
+                        <Route path='/support/setting' component={Setting} />
+                        <Route path='/support/asset' component={Asset} />
                         <Route component={Dashboard} />
                     </Switch>
                 </Container>
@@ -165,4 +180,4 @@ const mapStateToProps = state => ({
     currentUser: state.user.currentUser
 })
 
-export default connect(mapStateToProps)(Head);
+export default connect(mapStateToProps)(ITSupport);

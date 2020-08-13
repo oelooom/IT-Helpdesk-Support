@@ -14,3 +14,13 @@ export const removeSupport = support => ({
     type: userActionType.REMOVE_SUPPORT,
     payload: support
 })
+
+export const addUser = user => ({
+    type: userActionType.ADD_USER,
+    payload: user
+})
+
+export const removeUser = user => ({
+    type: userActionType.REMOVE_USER,
+    payload: user
+})

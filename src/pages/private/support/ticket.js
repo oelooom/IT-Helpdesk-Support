@@ -13,20 +13,20 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Typography from '@material-ui/core/Typography';
-import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import { confirmLending, returnLending } from '../../../config/post/ticket';
-import { addLending } from '../../../redux/ticket/ticketAction';
+import { addTicket, removeTicket } from '../../../redux/ticket/ticketAction';
+import { updateStatus } from '../../../config/post/ticket';
 import { addSupport } from '../../../redux/user/userAction';
 import { connect } from 'react-redux';
 import { firestore } from '../../../config/firebase';
 import { Link } from 'react-router-dom';
+import { useSnackbar } from 'notistack';
 
 
 const useStyles = makeStyles(theme => ({
     root: {
-        width: '90%',
+        width: '90%'
     },
     container: {
         maxHeight: 440,
@@ -42,21 +42,25 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-function Lending({ addLending, currentUser, addSupport, support, lending }) {
+function Ticket({ addTicket, removeTicket, ticket, currentUser, addSupport, support }) {
 
 
     useEffect(() => {
         async function getData() {
-            const userRef = firestore.collection('ticket').where('isLending', '==', true);
+            const userRef = firestore.collection('ticket').where('supportId', '==', currentUser.id);
 
             userRef.onSnapshot(async snap => {
                 const changes = snap.docChanges();
                 changes.forEach(change => {
                     if (change.type === 'added') {
-                        addLending({ id: change.doc.id, ...change.doc.data() })
+                        addTicket({ id: change.doc.id, ...change.doc.data() })
                     }
                     else if (change.type === 'modified') {
-                        addLending({ id: change.doc.id, ...change.doc.data() })
+                        addTicket({ id: change.doc.id, ...change.doc.data() })
+                    }
+                    else if (change.type === 'removed') {
+                        removeTicket({ id: change.doc.id, ...change.doc.data() });
+
                     }
                 })
             })
@@ -71,72 +75,56 @@ function Lending({ addLending, currentUser, addSupport, support, lending }) {
         }
 
         getData();
-    }, [addLending, currentUser, addSupport])
+    }, [addTicket, removeTicket, currentUser, addSupport])
 
     const columns = [
         { id: 'title', label: 'Title', minWidth: 180 },
         { id: 'category', label: 'Category', align: 'center', minWidth: 160 },
         { id: 'status', label: 'Status', minWidth: 160, align: 'center' },
-        { id: 'action', label: 'Action', minWidth: 160, align: 'center' },
+        { id: 'assign', label: 'Assign To', minWidth: 160, align: 'center' },
         { id: 'detail', label: 'Detail', minWidth: 100, align: 'center' }
     ];
 
     const classes = useStyles();
     const [page, setPage] = React.useState(0);
-    const [isSubmitting, setSubmitting] = useState(false);
-    const [confirm, setConfirm] = React.useState(false);
-    const [confirmData, setConfirmData] = React.useState({
+    const { enqueueSnackbar } = useSnackbar();
+    const [ticketData, setTicketData] = React.useState({
         ticketId: '',
         status: ''
     });
+    const [dialog, setDialog] = React.useState(false);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
-    const confirms = [{ id: 5, label: 'Accept' }, { id: 0, label: 'Reject' }]
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
+
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(+event.target.value);
         setPage(0);
     };
 
-    const handleConfirm = (data) => {
-        setConfirm(true);
-        setConfirmData({
-            ...confirmData,
-            ticketId: data
-        })
-    }
+    const [isSubmitting, setSubmitting] = useState(false);
 
-    const handleConfirmChange = (data, value) => {
-        setConfirmData({
-            ...confirmData,
-            status: value.id
+    const handleClick = (data) => {
+        console.log(data);
+        setTicketData({
+            ...ticketData,
+            ticketId: data.id,
+            status: data.status
         })
+        setDialog(true);
     }
 
     const handleSubmit = async () => {
         try {
             setSubmitting(true);
-            await confirmLending(confirmData);
-            setConfirm(false);
+            await updateStatus(ticketData)
+            setDialog(false);
+            enqueueSnackbar('Status has been updated', { variant: 'success' })
             setSubmitting(false);
         } catch (e) {
             alert(e.message)
-            setSubmitting(false);
-
-        }
-    }
-    const handleReturn = async data => {
-        try {
-            setSubmitting(true);
-            await returnLending(data);
-            setConfirm(false);
-            setSubmitting(false);
-        } catch (e) {
-            alert(e.message)
-            setSubmitting(false);
-
         }
     }
 
@@ -144,7 +132,7 @@ function Lending({ addLending, currentUser, addSupport, support, lending }) {
         <React.Fragment>
             <Paper className={classes.root} elevation={2}>
                 <div className={classes.tableHead}>
-                    <Typography variant='h6'>Asset Lending</Typography>
+                    <Typography variant='h6'>List Ticket</Typography>
                     <TextField className={classes.search} id='search' name='search' label='Search Ticket' size='small' />
                 </div>
                 <TableContainer className={classes.container}>
@@ -163,7 +151,7 @@ function Lending({ addLending, currentUser, addSupport, support, lending }) {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {lending.sort((a, b) => new Date(b.created.seconds * 1000) - new Date(a.created.seconds * 1000)).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => {
+                            {ticket.sort((a, b) => new Date(b.created.seconds * 1000) - new Date(a.created.seconds * 1000)).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => {
                                 let status;
                                 if (row.status === '1') {
                                     status = 'Received'
@@ -200,24 +188,23 @@ function Lending({ addLending, currentUser, addSupport, support, lending }) {
                                             >
                                                 {status}
                                             </TableCell>
-
                                             <TableCell
                                                 align='center'
                                                 style={{ minWidth: 160 }}
                                             >
-                                                {row.status === '1' && <Button variant='contained' color='secondary' size='small' onClick={() => handleConfirm(row.id)} disabled={isSubmitting}>Confirm</Button>}
 
-                                                {row.status === '5' && <Button variant='contained' color='secondary' size='small' onClick={() => handleReturn(row.id)} disabled={isSubmitting}>Return</Button>}
+                                                {row.status === '2' && <Button variant='contained' color='primary' size='small' onClick={() => handleClick({ id: row.id, status: '3' })}>Troubleshoot</Button>}
 
-                                                {row.status === '6' && 'Ticket Finish'}
+                                                {row.status === '3' && <Button variant='contained' color='primary' size='small' onClick={() => handleClick({ id: row.id, status: '4' })}>Finish</Button>}
+
+                                                {row.status === '4' && <Button variant='contained' color='primary' size='small' onClick={() => handleClick({ id: row.id, status: '3' })}>Reopen</Button>}
 
                                             </TableCell>
-
                                             <TableCell
                                                 align='center'
                                                 style={{ minWidth: 100 }}
                                             >
-                                                <Button variant='contained' component={Link} to={`/user/ticket/${row.id}`} color='primary' size='small'>Detail</Button>
+                                                <Button variant='contained' component={Link} to={`/support/ticket/${row.id}`} color='primary' size='small'>Detail</Button>
                                             </TableCell>
                                         </TableRow>
                                     </React.Fragment>
@@ -229,33 +216,26 @@ function Lending({ addLending, currentUser, addSupport, support, lending }) {
                 <TablePagination
                     rowsPerPageOptions={[5, 10, 25, 100]}
                     component="div"
-                    count={lending.length}
+                    count={ticket.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onChangePage={handleChangePage}
                     onChangeRowsPerPage={handleChangeRowsPerPage}
                 />
             </Paper>
-            <Dialog open={confirm}
+            <Dialog open={dialog}
                 disableBackdropClick={isSubmitting}
                 disableEscapeKeyDown={isSubmitting}
-                onBackdropClick={() => setConfirm(false)}
+                onBackdropClick={() => setDialog(false)}
                 maxWidth='xs'
                 fullWidth>
-                <DialogTitle> Lending Confirmation</DialogTitle>
+                <DialogTitle> Are You Sure?</DialogTitle>
                 <DialogContent dividers>
-                    <Autocomplete
-                        id="confirm"
-                        options={confirms}
-                        onChange={handleConfirmChange}
-                        getOptionLabel={(option) => option.label}
-                        getOptionSelected={(option) => option.id === confirmData.status}
-                        renderInput={(params) => <TextField {...params} label="Lending Confirmation" variant="outlined" size='small' disabled={isSubmitting} fullWidth margin='normal' />}
-                    />
+                    <Typography variant='h6'>{ticketData.status === '3' ? 'You must take the responsibility to troubleshoot thiis problem, with carefelly and warmly to user' : 'Make sure yang have solve the problem entirely, bruh!'} </Typography>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => setConfirm(false)}>Cancel</Button>
-                    <Button color='primary' onClick={handleSubmit}>Save</Button>
+                    <Button onClick={() => setDialog(false)} disabled={isSubmitting}>Cancel</Button>
+                    <Button color='primary' onClick={handleSubmit} disabled={isSubmitting}>Save</Button>
                 </DialogActions>
             </Dialog>
         </React.Fragment>
@@ -264,14 +244,15 @@ function Lending({ addLending, currentUser, addSupport, support, lending }) {
 }
 
 const mapStateToProps = state => ({
-    lending: state.ticket.lending,
+    ticket: state.ticket.ticket,
     currentUser: state.user.currentUser,
     support: state.user.support,
 })
 
 const mapDispatchToProps = dispatch => ({
-    addLending: lending => dispatch(addLending(lending)),
+    addTicket: ticket => dispatch(addTicket(ticket)),
+    removeTicket: ticket => dispatch(removeTicket(ticket)),
     addSupport: support => dispatch(addSupport(support))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(Lending);
+export default connect(mapStateToProps, mapDispatchToProps)(Ticket);

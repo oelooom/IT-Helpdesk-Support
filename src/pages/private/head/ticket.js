@@ -209,7 +209,7 @@ function Ticket({ addTicket, removeTicket, ticket, currentUser, addSupport, supp
                                                 align='center'
                                                 style={{ minWidth: 100 }}
                                             >
-                                                <Button variant='contained' component={Link} to={`/user/ticket/${row.id}`} color='primary' size='small'>Detail</Button>
+                                                <Button variant='contained' component={Link} to={`/head/ticket/${row.id}`} color='primary' size='small'>Detail</Button>
                                             </TableCell>
                                         </TableRow>
                                     </React.Fragment>
@@ -246,8 +246,8 @@ function Ticket({ addTicket, removeTicket, ticket, currentUser, addSupport, supp
                     />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => setDialog(false)}>Batal</Button>
-                    <Button color='primary' onClick={handleSubmit}>Simpan</Button>
+                    <Button onClick={() => setDialog(false)}>Cancel</Button>
+                    <Button color='primary' onClick={handleSubmit}>Save</Button>
                 </DialogActions>
             </Dialog>
         </React.Fragment>

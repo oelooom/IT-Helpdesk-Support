@@ -111,6 +111,7 @@ export const confirmLending = async (data) => {
 }
 
 export const returnLending = async (data) => {
+
     const ticketRef = firestore.collection('ticket').doc(data);
 
     try {
@@ -122,4 +123,18 @@ export const returnLending = async (data) => {
     }
 
     return ticketRef;
-} 
+}
+
+export const updateStatus = async data => {
+    console.log(data);
+    const ticketRef = firestore.collection('ticket').doc(data.ticketId);
+    const status = data.status.toString();
+
+    try {
+        await ticketRef.update({
+            status: status
+        })
+    } catch (e) {
+        alert(e.message)
+    }
+}

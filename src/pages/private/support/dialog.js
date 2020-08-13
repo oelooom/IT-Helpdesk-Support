@@ -7,7 +7,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { withRouter } from 'react-router-dom';
 import isEmail from 'validator/lib/isEmail';
-import { createSupport, auth2 } from '../../../config/post/support';
+import { createUser, auth2 } from '../../../config/post/support';
 
 
 import PropTypes from 'prop-types';
@@ -88,7 +88,7 @@ function AddDialog({ history, open, handleClose, closeDialog }) {
             try {
                 const { displayName, email, password, photoUrl, phoneNumber } = form;
                 const { user } = await auth2.createUserWithEmailAndPassword(email, password);
-                await createSupport(user, { displayName, photoUrl, phoneNumber })
+                await createUser(user, { displayName, photoUrl, phoneNumber })
                 auth2.signOut();
                 closeDialog(false);
                 setSubmitting(false);
@@ -134,7 +134,7 @@ function AddDialog({ history, open, handleClose, closeDialog }) {
             onClose={handleClose}
             maxWidth='xs'
             fullWidth>
-            <DialogTitle> Create IT Support Account</DialogTitle>
+            <DialogTitle> Create User</DialogTitle>
             <DialogContent dividers>
                 <TextField
                     id='displayName'

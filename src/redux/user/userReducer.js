@@ -3,7 +3,8 @@ import { checkUser, removeUser } from './userUtils';
 
 const INITIAL_STATE = {
     currentUser: null,
-    support: []
+    support: [],
+    user: []
 }
 
 const userReducer = (state = INITIAL_STATE, action) => {
@@ -22,6 +23,16 @@ const userReducer = (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 support: removeUser(state.support, action.payload)
+            }
+        case userActionType.ADD_USER:
+            return {
+                ...state,
+                user: checkUser(state.user, action.payload)
+            }
+        case userActionType.REMOVE_USER:
+            return {
+                ...state,
+                user: removeUser(state.user, action.payload)
             }
         default:
             return state;
