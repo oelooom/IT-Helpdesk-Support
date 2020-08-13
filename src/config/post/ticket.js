@@ -37,6 +37,7 @@ export const createTicket = async data => {
             detail: data.detail,
             status: data.status,
             supportId: null,
+            supportData: null,
             userId: data.userId,
             created: created,
             userdata: data.userdata,
@@ -51,14 +52,12 @@ export const createTicket = async data => {
 
 export const createCommentary = async data => {
 
-
-
-    const userRef = firestore.collection(`ticket`).doc(data.ticketId).collection('commentary');
+    const ticketRef = firestore.collection(`ticket`).doc(data.ticketId).collection('commentary');
 
     const created = new Date();
 
     try {
-        await userRef.add({
+        await ticketRef.add({
             ticketId: data.ticketId,
             userId: data.userId,
             displayName: data.displayName,
@@ -70,6 +69,21 @@ export const createCommentary = async data => {
         console.error(error)
     }
 
-    return userRef;
+    return ticketRef;
 }
 
+export const assignTicket = async (data) => {
+    const ticketRef = firestore.collection('ticket').doc(data.ticketId);
+
+    try {
+        await ticketRef.update({
+            supportId: data.supportId,
+            status: '2',
+            supportData: { displayName: data.displayName }
+        })
+    } catch (e) {
+        alert(e.message)
+    }
+
+    return ticketRef;
+} 

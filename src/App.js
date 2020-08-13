@@ -12,6 +12,7 @@ import FirebaseProvider from './config/firebase';
 import RolesChecking from './pages/public/roleschecking/roleschecking';
 import User from './pages/private/user';
 import Auth from './pages/public';
+import Head from './pages/private/head';
 
 function App({ setCurrentUser, currentUser }) {
 
@@ -44,6 +45,11 @@ function App({ setCurrentUser, currentUser }) {
         <SnackbarProvider maxSnack={3} autoHideDuration={3000}>
           <FirebaseProvider>
             <Switch>
+              <Route exact path='/head/setting' component={Head} />
+              <Route exact path='/head/ticket' component={Head} />
+              <Route exact path='/head/lending' component={Head} />
+              <Route exact path='/head/support' component={Head} />
+              <Route exact path='/head' component={Head} />
               <Route exact path='/user/ticket/:ticketID' component={User} />
               <Route exact path='/user/instruction' component={User} />
               <Route exact path='/user/ticket' component={User} />
